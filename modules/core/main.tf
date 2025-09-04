@@ -47,6 +47,42 @@ resource "aws_iam_policy" "default" {
           "athena:GetWorkGroup",
           "athena:ListDataCatalogs",
           "athena:ListDatabases",
+          "bedrock:ListAgents",
+          "bedrock:GetAgent",
+          "bedrock:ListAgentAliases",
+          "bedrock:GetAgentAlias",
+          "bedrock:ListKnowledgeBases",
+          "bedrock:GetKnowledgeBase",
+          "bedrock:ListDataSources",
+          "bedrock:GetDataSource",
+          "bedrock:ListFlows",
+          "bedrock:GetFlow",
+          "bedrock:ListFlowAliases",
+          "bedrock:GetFlowAlias",
+          "bedrock:ListFlowVersions",
+          "bedrock:GetFlowVersion",
+          "bedrock:ListGuardrails",
+          "bedrock:GetGuardrail",
+          "bedrock:ListCustomModels",
+          "bedrock:GetCustomModel",
+          "bedrock:ListEvaluationJobs",
+          "bedrock:GetEvaluationJob",
+          "bedrock:ListFoundationModels",
+          "bedrock:GetFoundationModel",
+          "bedrock:ListImportedModels",
+          "bedrock:GetImportedModel",
+          "bedrock:ListModelCopyJobs",
+          "bedrock:ListModelCustomizationJobs",
+          "bedrock:GetModelCustomizationJob",
+          "bedrock:ListModelImportJobs",
+          "bedrock:GetModelImportJob",
+          "bedrock:ListModelInvocationJobs",
+          "bedrock:GetModelInvocationJob",
+          "bedrock:ListProvisionedModelThroughputs",
+          "bedrock:ListBlueprints",
+          "bedrock:GetBlueprint",
+          "bedrock:ListDataAutomationProjects",
+          "bedrock:GetDataAutomationProject",
           "ce:GetCostAndUsage",
           "ce:GetCostAndUsageWithResources",
           "ce:GetCostCategories",
@@ -178,7 +214,24 @@ resource "aws_iam_policy" "default" {
           ]
           Resource = [one(aws_sqs_queue.default[*].arn)]
         }
-      ] : []
+      ] : [],
+      {
+        Sid    = "AdaEcsAccessForEcsAndAutoscalingMetadataTracking"
+        Effect = "Allow"
+        Action = [
+          "account:ListRegions",
+          "autoscaling:DescribeAutoScalingGroups",
+          "ec2:DescribeInstances",
+          "ecs:ListClusters",
+          "ecs:ListTasks",
+          "ecs:DescribeTasks",
+          "ec2:DescribeNetworkInterfaces",
+          "ecs:ListServices"
+        ]
+        Resource = [
+          "*"
+        ]
+      }
     )
   })
 

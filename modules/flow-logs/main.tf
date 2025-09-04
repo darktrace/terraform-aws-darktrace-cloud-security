@@ -31,6 +31,12 @@ resource "aws_iam_policy" "default" {
     Version = "2012-10-17"
     Statement = concat([
       {
+        Sid      = "AdaEcsAccessForMetadataTracking"
+        Effect   = "Allow"
+        Action   = "account:ListRegions"
+        Resource = "*"
+      },
+      {
         Sid    = "s3Actions"
         Effect = "Allow"
         Action = local.existing_flow_log_bucket == false ? concat(local.s3_default_actions, local.s3_additional_actions) : local.s3_default_actions
