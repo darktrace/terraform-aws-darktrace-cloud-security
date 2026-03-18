@@ -1,7 +1,3 @@
-#
-# IAM
-#
-
 resource "aws_iam_role" "default" {
   name        = "DarktraceRole"
   description = "Darktrace/Cloud Core Role"
@@ -24,11 +20,17 @@ resource "aws_iam_role" "default" {
     ]
   })
 
-  managed_policy_arns = [
-    aws_iam_policy.default.arn,
-    "arn:aws:iam::aws:policy/SecurityAudit"
-  ]
   tags = var.darktrace_cloud_security_tags
+}
+
+resource "aws_iam_role_policy_attachment" "security_audit" {
+  role       = aws_iam_role.default.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+}
+
+resource "aws_iam_role_policy_attachment" "default" {
+  role       = aws_iam_role.default.name
+  policy_arn = aws_iam_policy.default.arn
 }
 
 resource "aws_iam_policy" "default" {
@@ -47,42 +49,53 @@ resource "aws_iam_policy" "default" {
           "athena:GetWorkGroup",
           "athena:ListDataCatalogs",
           "athena:ListDatabases",
-          "bedrock:ListAgents",
           "bedrock:GetAgent",
-          "bedrock:ListAgentAliases",
-          "bedrock:GetAgentAlias",
-          "bedrock:ListKnowledgeBases",
-          "bedrock:GetKnowledgeBase",
-          "bedrock:ListDataSources",
-          "bedrock:GetDataSource",
-          "bedrock:ListFlows",
-          "bedrock:GetFlow",
-          "bedrock:ListFlowAliases",
-          "bedrock:GetFlowAlias",
-          "bedrock:ListFlowVersions",
-          "bedrock:GetFlowVersion",
-          "bedrock:ListGuardrails",
-          "bedrock:GetGuardrail",
-          "bedrock:ListCustomModels",
-          "bedrock:GetCustomModel",
-          "bedrock:ListEvaluationJobs",
-          "bedrock:GetEvaluationJob",
-          "bedrock:ListFoundationModels",
-          "bedrock:GetFoundationModel",
-          "bedrock:ListImportedModels",
-          "bedrock:GetImportedModel",
-          "bedrock:ListModelCopyJobs",
-          "bedrock:ListModelCustomizationJobs",
-          "bedrock:GetModelCustomizationJob",
-          "bedrock:ListModelImportJobs",
-          "bedrock:GetModelImportJob",
-          "bedrock:ListModelInvocationJobs",
-          "bedrock:GetModelInvocationJob",
-          "bedrock:ListProvisionedModelThroughputs",
-          "bedrock:ListBlueprints",
+          "bedrock:GetAgentActionGroup",
+          "bedrock:GetAgentVersion",
           "bedrock:GetBlueprint",
-          "bedrock:ListDataAutomationProjects",
           "bedrock:GetDataAutomationProject",
+          "bedrock:GetDataSource",
+          "bedrock:GetEvaluationJob",
+          "bedrock:GetFlow",
+          "bedrock:GetFlowVersion",
+          "bedrock:GetGuardrail",
+          "bedrock:GetKnowledgeBase",
+          "bedrock:GetModelInvocationJob",
+          "bedrock:ListAgentCollaborators",
+          "bedrock:ListBlueprints",
+          "bedrock:ListDataAutomationProjects",
+          "bedrock-agentcore:GetAgentRuntime",
+          "bedrock-agentcore:GetAgentRuntimeEndpoint",
+          "bedrock-agentcore:GetApiKeyCredentialProvider",
+          "bedrock-agentcore:GetBrowser",
+          "bedrock-agentcore:GetCodeInterpreter",
+          "bedrock-agentcore:GetEvaluator",
+          "bedrock-agentcore:GetGateway",
+          "bedrock-agentcore:GetGatewayTarget",
+          "bedrock-agentcore:GetMemory",
+          "bedrock-agentcore:GetOauth2CredentialProvider",
+          "bedrock-agentcore:GetOnlineEvaluationConfig",
+          "bedrock-agentcore:GetPolicy",
+          "bedrock-agentcore:GetPolicyEngine",
+          "bedrock-agentcore:GetResourcePolicy",
+          "bedrock-agentcore:GetTokenVault",
+          "bedrock-agentcore:GetWorkloadIdentity",
+          "bedrock-agentcore:ListAgentRuntimeEndpoints",
+          "bedrock-agentcore:ListAgentRuntimes",
+          "bedrock-agentcore:ListAgentRuntimeVersions",
+          "bedrock-agentcore:ListApiKeyCredentialProviders",
+          "bedrock-agentcore:ListBrowsers",
+          "bedrock-agentcore:ListCodeInterpreters",
+          "bedrock-agentcore:ListEvaluators",
+          "bedrock-agentcore:ListGateways",
+          "bedrock-agentcore:ListGatewayTargets",
+          "bedrock-agentcore:ListMemories",
+          "bedrock-agentcore:ListOauth2CredentialProviders",
+          "bedrock-agentcore:ListOnlineEvaluationConfigs",
+          "bedrock-agentcore:ListPolicies",
+          "bedrock-agentcore:ListPolicyEngines",
+          "bedrock-agentcore:ListTagsForResource",
+          "bedrock-agentcore:ListWorkloadIdentities",
           "ce:GetCostAndUsage",
           "ce:GetCostAndUsageWithResources",
           "ce:GetCostCategories",
@@ -108,8 +121,11 @@ resource "aws_iam_policy" "default" {
           "ecr:GetRegistryPolicy",
           "eks:DescribeFargateProfile",
           "eks:ListFargateProfiles",
+          "elasticbeanstalk:DescribeApplications",
+          "elasticfilesystem:DescribeAccessPoints",
           "emr-containers:ListVirtualClusters",
           "emr-serverless:ListApplications",
+          "glue:GetConnections",
           "glue:GetDevEndpoint",
           "glue:GetJob",
           "glue:GetMLTransforms",
@@ -121,6 +137,8 @@ resource "aws_iam_policy" "default" {
           "glue:ListSchemas",
           "kms:GetKeyRotationStatus",
           "lambda:GetFunction",
+          "lambda:GetFunctionUrlConfig",
+          "lightsail:GetStaticIps",
           "logs:FilterLogEvents",
           "macie2:ListFindings",
           "macie2:GetMacieSession",
@@ -129,6 +147,8 @@ resource "aws_iam_policy" "default" {
           "macie2:GetClassificationExportConfiguration",
           "macie2:GetFindingsPublicationConfiguration",
           "qldb:ListLedgers",
+          "s3:ListAccessGrants",
+          "s3:ListAccessGrantsInstances",
           "sagemaker:GetModelPackageGroupPolicy",
           "servicecatalog:DescribePortfolio",
           "servicecatalog:ListPortfolios",
@@ -139,6 +159,12 @@ resource "aws_iam_policy" "default" {
           "tag:GetResources",
           "tag:GetTagKeys",
           "tag:GetTagValues",
+          "vpc-lattice:ListServices",
+          "vpc-lattice:ListNetworks",
+          "vpc-lattice:ListServiceNetworkServiceAssociations",
+          "vpc-lattice:ListServiceNetworkResourceAssociations",
+          "vpc-lattice:ListResourceEndpointAssociations",
+          "vpc-lattice:ListTargetGroups",
           "waf-regional:ListRateBasedRules",
           "waf-regional:ListRuleGroups",
           "waf-regional:ListRules",
@@ -164,247 +190,8 @@ resource "aws_iam_policy" "default" {
           ]
         }
       ] : [],
-      # Only created if setup_cloudtrail is true
-      var.setup_cloudtrail ? [
-        {
-          Effect = "Allow"
-          Action = concat(
-            [
-              "s3:GetLifecycleConfiguration",
-              "s3:GetObject",
-              "s3:ListObject",
-              "s3:ListBucket"
-            ],
-            # Only created if autoconfigure_cloudtrail is true
-            var.autoconfigure_cloudtrail ? ["s3:PutLifecycleConfiguration"] : []
-          )
-          Resource = [
-            "arn:aws:s3:::${coalesce(var.existing_cloudtrail_bucket_name, try(aws_s3_bucket.default[0].bucket, ""))}/*",
-            "arn:aws:s3:::${coalesce(var.existing_cloudtrail_bucket_name, try(aws_s3_bucket.default[0].bucket, ""))}"
-          ]
-        },
-        {
-          Effect = "Allow"
-          Action = [
-            "cloudtrail:DescribeTrails"
-          ],
-          Resource = [
-            "*"
-          ]
-        },
-        {
-          Effect = "Allow"
-          Action = concat(
-            ["cloudtrail:GetEventSelectors"],
-            # Only created if autoconfigure_cloudtrail is true
-            var.autoconfigure_cloudtrail ? ["cloudtrail:PutEventSelectors"] : []
-          )
-          Resource = [
-            "arn:aws:cloudtrail:*:*:trail/${coalesce(var.existing_cloudtrail_name, try(aws_cloudtrail.default[0].name, ""))}"
-          ]
-        }
-      ] : [],
-      # Only created if setup_cloudtrail and setup_sqs is true
-      var.setup_cloudtrail == true && var.setup_sqs == true ? [
-        {
-          Effect = "Allow"
-          Action = [
-            "sqs:ReceiveMessage",
-            "sqs:DeleteMessage"
-          ]
-          Resource = [one(aws_sqs_queue.default[*].arn)]
-        }
-      ] : [],
-      {
-        Sid    = "AdaEcsAccessForEcsAndAutoscalingMetadataTracking"
-        Effect = "Allow"
-        Action = [
-          "account:ListRegions",
-          "autoscaling:DescribeAutoScalingGroups",
-          "ec2:DescribeInstances",
-          "ecs:ListClusters",
-          "ecs:ListTasks",
-          "ecs:DescribeTasks",
-          "ec2:DescribeNetworkInterfaces",
-          "ecs:ListServices"
-        ]
-        Resource = [
-          "*"
-        ]
-      }
     )
   })
 
   tags = var.darktrace_cloud_security_tags
-}
-
-#
-# s3
-#
-
-resource "aws_s3_bucket" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = "darktrace-bucket-${local.account_id}"
-
-  tags = var.darktrace_cloud_security_tags
-}
-
-resource "aws_s3_bucket_versioning" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  rule {
-    status = "Enabled"
-    id     = "DarktraceBucketLifecycle"
-    expiration {
-      days = 30
-    }
-    noncurrent_version_expiration {
-      noncurrent_days = 30
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AWSCloudTrailAclCheck"
-        Effect = "Allow"
-        Action = "s3:GetBucketAcl"
-        Resource = [
-          aws_s3_bucket.default[0].arn
-        ]
-        Principal = {
-          Service = "cloudtrail.amazonaws.com"
-        }
-      },
-      {
-        Sid    = "AWSCloudTrailWrite"
-        Effect = "Allow"
-        Action = "s3:PutObject"
-        Resource = [
-          "${aws_s3_bucket.default[0].arn}/AWSLogs/*"
-        ]
-        Condition = {
-          StringEquals = {
-            "s3:x-amz-acl" = "bucket-owner-full-control"
-          }
-        }
-        Principal = {
-          Service = "cloudtrail.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
-#
-# SQS
-#
-resource "aws_sqs_queue" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true && var.setup_sqs == true ? 1 : 0
-  name   = local.sqs_queue_name
-  policy = data.aws_iam_policy_document.default[0].json
-}
-
-data "aws_iam_policy_document" "default" {
-  count = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true && var.setup_sqs == true ? 1 : 0
-  statement {
-    effect = "Allow"
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        local.account_id
-      ]
-    }
-
-    actions   = ["sqs:SendMessage"]
-    resources = ["arn:aws:sqs:${local.region}:${local.account_id}:${local.sqs_queue_name}"]
-
-    condition {
-      test     = "ArnEquals"
-      variable = "aws:SourceArn"
-      values   = [aws_s3_bucket.default[0].arn]
-    }
-  }
-}
-
-resource "aws_s3_bucket_notification" "default" {
-  count  = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true && var.setup_sqs == true ? 1 : 0
-  bucket = aws_s3_bucket.default[0].id
-
-  queue {
-    queue_arn = aws_sqs_queue.default[0].arn
-    events    = ["s3:ObjectCreated:*"]
-  }
-}
-
-#
-# CloudTrail
-#
-resource "aws_cloudtrail" "default" {
-  count = var.existing_cloudtrail_name == null && var.existing_cloudtrail_bucket_name == null && var.setup_cloudtrail == true ? 1 : 0
-
-  name           = "DarktraceTrail"
-  s3_bucket_name = aws_s3_bucket.default[0].bucket
-
-  enable_logging                = true
-  include_global_service_events = true
-  is_multi_region_trail         = true
-  is_organization_trail         = var.is_organization_admin_account
-
-  event_selector {
-    data_resource {
-      type   = "AWS::S3::Object"
-      values = ["arn:aws:s3"]
-    }
-
-    data_resource {
-      type   = "AWS::Lambda::Function"
-      values = ["arn:aws:lambda"]
-    }
-
-    include_management_events = true
-    read_write_type           = "All"
-  }
-
-  tags = var.darktrace_cloud_security_tags
-
-  depends_on = [aws_s3_bucket_policy.default[0]]
 }

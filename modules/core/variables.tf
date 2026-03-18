@@ -17,8 +17,7 @@ variable "is_organization_admin_account" {
 
 variable "setup_cloudtrail" {
   type        = bool
-  description = "Setup CloudTrail for Darktrace/Cloud"
-  default     = false
+  description = "Setup permissions and optional resources for Darktrace /CLOUD AWS Audit Logs. Only should be true for either a single management account or a single logging account. One account per organisation."
 }
 
 variable "autoconfigure_cloudtrail" {
@@ -45,8 +44,14 @@ variable "existing_cloudtrail_bucket_name" {
   default     = null
 }
 
-variable "setup_sqs" {
-  type        = bool
-  description = "Setup SQS queue for Darktrace/Cloud to reduce latency when retrieving flow log data"
-  default     = false
+variable "existing_cloudtrail_bucket_sqs_arn" {
+  type        = string
+  description = "Existing CloudTrail SQS Queue ARN"
+  default     = null
+}
+
+variable "kms_arns" {
+  type        = list(string)
+  description = "List of KMS Key ARNs that the CloudTrail role needs decrypt permissions for"
+  default     = []
 }

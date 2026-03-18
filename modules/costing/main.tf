@@ -19,8 +19,12 @@ resource "aws_iam_role" "default" {
     ]
   })
 
-  managed_policy_arns = [aws_iam_policy.default.arn]
-  tags                = var.darktrace_cloud_security_tags
+  tags = var.darktrace_cloud_security_tags
+}
+
+resource "aws_iam_role_policy_attachment" "default" {
+  role       = aws_iam_role.default.name
+  policy_arn = aws_iam_policy.default.arn
 }
 
 resource "aws_iam_policy" "default" {
@@ -186,7 +190,7 @@ resource "aws_cur_report_definition" "default" {
   compression                = "Parquet"
   format                     = "Parquet"
   refresh_closed_reports     = false
-  report_name                = coalesce(var.existing_cur_report_name, "darktrace-cur")
+  report_name                = coalesce(var.existing_cur_report_name, "darktrace-cur-${local.account_id}")
   report_versioning          = "CREATE_NEW_REPORT"
   s3_bucket                  = coalesce(var.existing_cur_bucket_name, try(aws_s3_bucket.default[0].bucket, ""))
   s3_prefix                  = coalesce(var.existing_cur_bucket_prefix, "reports")
