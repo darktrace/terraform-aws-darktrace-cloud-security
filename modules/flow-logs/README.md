@@ -32,6 +32,9 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_darktrace_cloud_security_core_iam_role_arn"></a> [darktrace\_cloud\_security\_core\_iam\_role\_arn](#input\_darktrace\_cloud\_security\_core\_iam\_role\_arn) | ARN of Darktrace/Cloud Core IAM Policy | `string` | n/a | yes |
 | <a name="input_darktrace_cloud_security_tags"></a> [darktrace\_cloud\_security\_tags](#input\_darktrace\_cloud\_security\_tags) | Common tags to add to resources | `map(any)` | `null` | no |
+| <a name="input_flow_logs_bucket_name"></a> [flow\_logs\_bucket\_name](#input\_flow\_logs\_bucket\_name) | Customer-provided S3 bucket name for flow logs. Must be provided together with sqs\_queue\_arns for 'Create Flow Logs Only' setup. | `string` | `null` | no |
+| <a name="input_kms_arns"></a> [kms\_arns](#input\_kms\_arns) | Optional list of KMS key ARNs for decryption. When provided, a KMS decrypt statement is appended to the policy. | `list(string)` | `[]` | no |
+| <a name="input_sqs_queue_arns"></a> [sqs\_queue\_arns](#input\_sqs\_queue\_arns) | List of customer-provided SQS queue ARNs. When provided with flow\_logs\_bucket\_name, enables 'Create Flow Logs Only' setup. When provided alone, enables 'Fully Custom with SQS' setup. | `list(string)` | `[]` | no |
 
 ## Outputs
 
