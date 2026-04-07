@@ -75,7 +75,9 @@ resource "aws_s3_bucket" "default" {
   count  = var.existing_cur_bucket_name == null ? 1 : 0
   bucket = "darktrace-costing-${local.account_id}"
 
-  tags = var.darktrace_cloud_security_tags
+  tags          = var.darktrace_cloud_security_tags
+  provider      = aws.us_east_1
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "default" {
@@ -190,11 +192,11 @@ resource "aws_cur_report_definition" "default" {
   compression                = "Parquet"
   format                     = "Parquet"
   refresh_closed_reports     = false
-  report_name                = coalesce(var.existing_cur_report_name, "darktrace-cur-${local.account_id}")
+  report_name                = coalesce(var.existing_cur_report_name, "darktrace-cur")
   report_versioning          = "CREATE_NEW_REPORT"
   s3_bucket                  = coalesce(var.existing_cur_bucket_name, try(aws_s3_bucket.default[0].bucket, ""))
   s3_prefix                  = coalesce(var.existing_cur_bucket_prefix, "reports")
-  s3_region                  = local.region
+  s3_region                  = "us-east-1"
   time_unit                  = "DAILY"
 
   depends_on = [aws_s3_bucket_policy.default]
