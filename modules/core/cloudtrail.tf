@@ -140,7 +140,8 @@ resource "aws_iam_policy" "cloudtrail" {
       local.dt_managed || var.existing_cloudtrail_bucket_sqs_arn != null ? [{
         Action = [
           "sqs:ReceiveMessage",
-          "sqs:DeleteMessage"
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
         ]
         Resource = [
           coalesce(var.existing_cloudtrail_bucket_sqs_arn, try(one(aws_sqs_queue.default[*].arn), ""))
