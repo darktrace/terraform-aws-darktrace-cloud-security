@@ -137,6 +137,15 @@ resource "aws_iam_policy" "cloudtrail" {
         Resource = "*"
         Effect   = "Allow"
       }] : [],
+      # When no SQS queue is used we poll the bucket directly, so we need to be
+      # able to resolve the organisation to enumerate its member accounts.
+      var.existing_cloudtrail_bucket_sqs_arn == null && !local.dt_managed ? [{
+        Action = [
+          "organizations:DescribeOrganization"
+        ]
+        Resource = "*"
+        Effect   = "Allow"
+      }] : [],
       local.dt_managed || var.existing_cloudtrail_bucket_sqs_arn != null ? [{
         Action = [
           "sqs:ReceiveMessage",

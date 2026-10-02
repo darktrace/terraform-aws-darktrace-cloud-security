@@ -86,6 +86,11 @@ run "module_core_existing_infra_no_sqs" {
     condition     = can(regex("s3:ListBucket", aws_iam_policy.cloudtrail[0].policy))
     error_message = "Existing Infrastructure No-SQS does not have ListBucket permissions"
   }
+
+  assert {
+    condition     = can(regex("organizations:DescribeOrganization", aws_iam_policy.cloudtrail[0].policy))
+    error_message = "Existing Infrastructure No-SQS should have organizations:DescribeOrganization permission for bucket polling"
+  }
 }
 
 run "module_core_existing_infra_sqs" {
@@ -121,6 +126,11 @@ run "module_core_existing_infra_sqs" {
   assert {
     condition     = can(regex("sqs:ReceiveMessage", aws_iam_policy.cloudtrail[0].policy))
     error_message = "Existing Infrastructure IAM Policy does not contain SQS Permissions when SQS is provided"
+  }
+
+  assert {
+    condition     = !can(regex("organizations:DescribeOrganization", aws_iam_policy.cloudtrail[0].policy))
+    error_message = "Existing Infrastructure with SQS should not have organizations:DescribeOrganization permission"
   }
 }
 
